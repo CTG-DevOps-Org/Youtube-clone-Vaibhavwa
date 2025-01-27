@@ -1,39 +1,38 @@
-  trigger: main
+trigger: 
+  - main
 
-Stages:
+stages:
 - stage: Build
   jobs:
   - job: Build
-    pool 
-      vmimage: "ubuntu-latest"
+    pool: 
+      vmImage: "ubuntu-latest"
     steps:
-    -task: Npm@1
-     inputs:
+    - task: Npm@1
+      inputs:
         command: 'install'
         
-        -task: Npm@1
-     inputs:
+    - task: Npm@1
+      inputs:
         command: 'run build'
 
-        - task: PublishBuildArtifacts@1
-          inputs:
-            PathtoPublish: 'build'
-            ArtifactName: 'drop'
-            publishLocation: 'Container'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: 'build'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
 
-- stage: deploy
+- stage: Deploy
   jobs:
   - job: Deploy
-    Pool
-      vmimgae: "ubuntu-latest"
-      steps:
-      - task: AzureRmWebAppDeployment@4
-  inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: 'Pay-As-You-Go (9cf7f2af-ff8e-40fb-811b-c4c217b5a5e1)'
-    appType: 'webAppLinux'
-    WebAppName: 'TechTutorialsWithVaibhav'
-    packageForLinux: '$(System.DefaultWorkingDirectory)/build'
-    RuntimeStack: 'STATICSITE|1.0'
-
-  
+    pool: 
+      vmImage: "ubuntu-latest"
+    steps:
+    - task: AzureRmWebAppDeployment@4
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'Pay-As-You-Go (9cf7f2af-ff8e-40fb-811b-c4c217b5a5e1)'
+        appType: 'webAppLinux'
+        WebAppName: 'TechTutorialsWithVaibhav'
+        packageForLinux: '$(System.DefaultWorkingDirectory)/drop/build'
+        RuntimeStack: 'STATICSITE|1.0'

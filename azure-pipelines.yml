@@ -42,5 +42,5 @@ stages:
         azureSubscription: 'Pay-As-You-Go (9cf7f2af-ff8e-40fb-811b-c4c217b5a5e1)'
         appType: 'webAppLinux'
         WebAppName: 'TechTutorialsWithVaibhav'
-        packageForLinux: '$(System.ArtifactsDirectory)/drop/build'
+        packageForLinux: '$(System.ArtifactsDirectory)/drop'
         RuntimeStack: 'STATICSITE|1.0'

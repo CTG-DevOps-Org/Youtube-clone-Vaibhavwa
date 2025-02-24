@@ -1,25 +1,27 @@
-trigger: 
-  - main
+trigger:
+  branches:
+    include:
+      - main
 
-stages:
-- stage: Build
-  jobs:
-  - job: Build
-    pool: 
-      vmImage: "ubuntu-latest"
-    steps:
-    - task: Npm@1
-      inputs:
-        command: 'install'
-        
-    - task: Npm@1
-      inputs:
-        command: 'custom'
-        customCommand: "run build"
+pool:
+  vmImage: 'ubuntu-latest'
 
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: 'build'
-        ArtifactName: 'drop'
-        publishLocation: 'Container'
+steps:
+  - checkout: self
 
+  - task: SonarCloudPrepare@1
+    inputs:
+      SonarCloud: 'SonarCloud'
+      organization: 'CTG-DevOps-Org'
+      projectKey: 'ctg-devops-org'
+      scannerMode: 'CLI'
+      extraProperties: |
+        sonar.projectName=Youtube-clone-Vaibhavwa
+        sonar.projectVersion=1.0
+        sonar.sources=.
+
+  - task: SonarCloudAnalyze@1
+
+  - task: SonarCloudPublish@1
+    inputs:
+      pollingTimeoutSec: '300'

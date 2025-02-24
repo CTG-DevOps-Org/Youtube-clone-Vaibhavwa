@@ -1,27 +1,34 @@
 trigger:
-  branches:
-    include:
-      - main
+- main  # Change to your branch name if different
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: 'SelfHosted'  # Replace with your actual self-hosted agent pool name
 
 steps:
-  - checkout: self
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'SonarCloud'  # Ensure this matches your service connection name in Azure DevOps
+    organization: 'CTG-DevOps-Org'  # Replace with your SonarCloud organization name
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: 'ctg-devops-org'  # Replace with your SonarCloud project key
+    cliProjectName: 'Youtube-clone-Vaibhavwa'  # Replace with your project name
+    cliSources: '.'
 
-  - task: SonarCloudPrepare@1
-    inputs:
-      SonarCloud: 'SonarCloud'
-      organization: 'CTG-DevOps-Org'
-      projectKey: 'ctg-devops-org'
-      scannerMode: 'CLI'
-      extraProperties: |
-        sonar.projectName=Youtube-clone-Vaibhavwa
-        sonar.projectVersion=1.0
-        sonar.sources=.
+- script: |
+    echo "Running build..."
+    # Add your build command (e.g., dotnet build, npm install, etc.)
+  displayName: 'Build Project'
 
-  - task: SonarCloudAnalyze@1
+- task: SonarCloudAnalyze@1
+  displayName: 'Run SonarCloud Analysis'
 
-  - task: SonarCloudPublish@1
-    inputs:
-      pollingTimeoutSec: '300'
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
+  displayName: 'Publish SonarCloud Results'
+
+- script: |
+    echo "Deployment step if required..."
+    # Add deployment steps if needed
+  displayName: 'Deployment Step (Optional)'

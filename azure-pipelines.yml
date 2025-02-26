@@ -2,7 +2,7 @@ trigger:
 - main  # Change to your branch name if different
 
 pool:
-  name: 'SelfHosted'  # Replace with your actual self-hosted agent pool name
+  vmImage: 'ubuntu-latest'  # Uses a Microsoft-hosted agent (Linux). Change if needed.
 
 steps:
 - task: SonarCloudPrepare@1
@@ -17,7 +17,7 @@ steps:
 
 - script: |
     echo "Running build..."
-    # Add your build command (e.g., dotnet build, npm install, etc.)
+    # Add your actual build command (e.g., dotnet build, npm install, etc.)
   displayName: 'Build Project'
 
 - task: SonarCloudAnalyze@1

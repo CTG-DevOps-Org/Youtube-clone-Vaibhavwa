@@ -1,4 +1,0 @@
-variables:
-  ENVIRONMENT: "qa"
-  DB_NAME: "QADatabase"
-  API_URL: "https://qa.api.example.com"

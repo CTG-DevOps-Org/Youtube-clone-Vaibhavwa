@@ -1,4 +1,0 @@
-variables:
-  ENVIRONMENT: "prod"
-  DB_NAME: "ProdDatabase"
-  API_URL: "https://prod.api.example.com"

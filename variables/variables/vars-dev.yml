@@ -1,4 +1,0 @@
-variables:
-  ENVIRONMENT: "dev"
-  DB_NAME: "DevDatabase"
-  API_URL: "https://dev.api.example.com"

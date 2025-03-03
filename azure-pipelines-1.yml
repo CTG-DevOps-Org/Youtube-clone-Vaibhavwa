@@ -1,0 +1,22 @@
+trigger:
+  branches:
+    include:
+      - main
+      - dev
+      - qa
+      - prod
+
+variables:
+  - template: variables/vars-$(Build.SourceBranchName).yml  # Load branch-specific variables
+  - group: MySecretVariableGroup  # Secure variables from Azure DevOps
+
+stages:
+  - stage: Build
+    jobs:
+      - job: BuildJob
+        steps:
+          - script: |
+              echo "Building for branch $(Build.SourceBranchName)"
+              echo "App Environment: $(APP_ENV)"
+              echo "Database: $(DB_CONNECTION_STRING)"
+            displayName: "Show Environment Variables"

@@ -7,8 +7,16 @@ trigger:
       - prod
 
 variables:
-  - template: variables/vars-$(Build.SourceBranchName).yml  # Load branch-specific variables
-  - group: MySecretVariableGroup  # Secure variables from Azure DevOps
+  - name: BranchName
+    ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+      value: 'prod'  # Map 'main' branch to 'prod' environment
+    ${{ if eq(variables['Build.SourceBranchName'], 'dev') }}:
+      value: 'dev'
+    ${{ if eq(variables['Build.SourceBranchName'], 'qa') }}:
+      value: 'qa'
+    
+  - template: variables/vars-$(BranchName).yml  # Load the correct variable file
+  - group: MySecretVariableGroup  # Secure variables
 
 stages:
   - stage: Build
@@ -17,6 +25,7 @@ stages:
         steps:
           - script: |
               echo "Building for branch $(Build.SourceBranchName)"
+              echo "Using environment: $(BranchName)"
               echo "App Environment: $(APP_ENV)"
               echo "Database: $(DB_CONNECTION_STRING)"
             displayName: "Show Environment Variables"

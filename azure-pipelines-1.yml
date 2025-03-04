@@ -6,14 +6,24 @@ trigger:
       - qa
 
 variables:
-  - template: variables/vars-$(Build.SourceBranchName).yml
+  # Fix to extract only the branch name from 'refs/heads/dev'
+  - template: variables/vars-$(Build.SourceBranchName | split('/')[2]).yml
   - group: MySecretVariableGroup
 
 stages:
+  - stage: Debug
+    jobs:
+      - job: CheckFiles
+        steps:
+          - script: echo "Branch Name:$(Build.SourceBranchName)"
+          - script: echo "Resolved YAML Path:variables/vars-$(Build.SourceBranchName | split('/')[2]).yml"
+          - script: ls -R variables  # Check if the 'variables' folder exists
+          - script: cat variables/vars-$(Build.SourceBranchName | split('/')[2]).yml  # Read the expected file
+
   - stage: Build
     jobs:
       - job: BuildJob
         steps:
-          - script: echo "Environment: $(environmentName)"
-          - script: echo "App URL: $(techtutorialswithvaibhav-gve9e7cdfvd5evcb.centralindia-01.azurewebsites.net)"
+          - script: echo "Environment:$(REACT_APP_RAPID_API)"
+          - script: echo "App URL:$(appUrl)"
           - script: echo "Will not display secrets, but can use them securely."

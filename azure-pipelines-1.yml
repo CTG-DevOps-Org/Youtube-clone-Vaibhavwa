@@ -4,28 +4,16 @@ trigger:
       - main
       - dev
       - qa
-      - prod
 
 variables:
-  - name: BranchName
-    ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
-      value: 'prod'  # Map 'main' branch to 'prod' environment
-    ${{ if eq(variables['Build.SourceBranchName'], 'dev') }}:
-      value: 'dev'
-    ${{ if eq(variables['Build.SourceBranchName'], 'qa') }}:
-      value: 'qa'
-    
-  - template: variables/vars-$(BranchName).yml  # Load the correct variable file
-  - group: MySecretVariableGroup  # Secure variables
+  - template: variables/vars-$(Build.SourceBranchName).yml
+  - group: MySecretVariableGroup
 
 stages:
   - stage: Build
     jobs:
       - job: BuildJob
         steps:
-          - script: |
-              echo "Building for branch $(Build.SourceBranchName)"
-              echo "Using environment: $(BranchName)"
-              echo "App Environment: $(APP_ENV)"
-              echo "Database: $(DB_CONNECTION_STRING)"
-            displayName: "Show Environment Variables"
+          - script: echo "Environment: $(environmentName)"
+          - script: echo "App URL: $(techtutorialswithvaibhav-gve9e7cdfvd5evcb.centralindia-01.azurewebsites.net)"
+          - script: echo "Will not display secrets, but can use them securely."
